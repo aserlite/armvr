@@ -36,16 +36,28 @@ async function generateJSON() {
 
         const existingData = existingSets[id];
 
+        const finalTags = (existingData && existingData.tags)
+            ? existingData.tags
+            : (metadata.common.genre || ['Uncategorized']);
+
         const finalTracklist = (existingData && existingData.tracklist)
             ? existingData.tracklist
             : [{ time: "00:00", title: "Unknown" }];
 
+        const finalTitle = (existingData && existingData.title)
+            ? existingData.title
+            : (metadata.common.title || baseName);
+
+        const finalDate = (existingData && existingData.date)
+            ? existingData.date
+            : (metadata.common.date || stat.birthtime.toISOString().split('T')[0]);
+
         return {
             id: id,
-            title: metadata.common.title || baseName,
+            title: finalTitle,
             duration: Math.round(metadata.format.duration),
-            tags: metadata.common.genre || ['Uncategorized'],
-            date: metadata.common.date || stat.birthtime.toISOString().split('T')[0],
+            tags: finalTags,
+            date: finalDate,
             audioUrl: `audio/${file}`,
             coverUrl: `images/${baseName}.jpg`,
             tracklist: finalTracklist

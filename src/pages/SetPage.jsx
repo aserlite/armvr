@@ -53,7 +53,8 @@ export default function SetPage() {
             <Link to="/" className="back-link">← Retour</Link>
 
             <div className="set-page-header">
-                <img src={set.coverUrl} alt={set.title} className="set-page-cover" />
+                <img src={`${import.meta.env.BASE_URL}${set.coverUrl}`} alt="cover" className="set-page-cover" />
+
 
                 <div className="set-page-info">
                     <h1>{set.title}</h1>

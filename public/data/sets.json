@@ -1,6 +1,116 @@
 {
   "sets": [
     {
+      "id": "01_Set_Welcome",
+      "title": "Set Welcome",
+      "duration": 1762,
+      "tags": [
+        "Techno",
+        "Hardtechno",
+        "Hardcore"
+      ],
+      "date": "2025-09-21",
+      "audioUrl": "audio/01 Set Welcome.mp3",
+      "coverUrl": "images/01 Set Welcome.jpg",
+      "tracklist": [
+        {
+          "time": "00:00",
+          "title": "Up to no good - Lobsta B"
+        },
+        {
+          "time": "01:54",
+          "title": "Jump - Blackpink"
+        },
+        {
+          "time": "03:08",
+          "title": "The oldschool vibe - Kevin D'Angello"
+        },
+        {
+          "time": "03:48",
+          "title": "Oggy and the cockroaches - Syk Insanity"
+        },
+        {
+          "time": "04:30",
+          "title": "Polska Jumpstyle - Mr.Polska / Natte Visstick"
+        },
+        {
+          "time": "05:36",
+          "title": "Thalassophobia - APHOTIC"
+        },
+        {
+          "time": "07:05",
+          "title": "Kyrie - PYREZ / Anticure"
+        },
+        {
+          "time": "01:54",
+          "title": "Jump - Blackpink"
+        },
+        {
+          "time": "08:59",
+          "title": "Prozaczopixan Reloaded - Vald / Vladimir Cauchemar"
+        },
+        {
+          "time": "10:35",
+          "title": "Turn up the bass - JAXXR"
+        },
+        {
+          "time": "11:45",
+          "title": "Kiss - NOVE!L"
+        },
+        {
+          "time": "13:44",
+          "title": "Let's get hype - The dark Horror "
+        },
+        {
+          "time": "14:51",
+          "title": "The light - Rebelion / Dual Damage"
+        },
+        {
+          "time": "16:12",
+          "title": "Dog Music - So Juice"
+        },
+        {
+          "time": "18:05",
+          "title": "Bust a move - Dither"
+        },
+        {
+          "time": "20:32",
+          "title": "We always rise - Dither / Deadly Guns"
+        },
+        {
+          "time": "22:05",
+          "title": "G.A.B.B.E.R - Dither"
+        },
+        {
+          "time": "23:35",
+          "title": "Oldschool Newschool - Von Bikrav"
+        },
+        {
+          "time": "25:56",
+          "title": "J'attends la pluie - Evil Grimace"
+        }
+      ]
+    },
+    {
+      "id": "01_Set_winter_graou",
+      "title": "Set winter graou",
+      "duration": 2423,
+      "tags": [
+        "Hardcore",
+        "Gabber",
+        "Frapcore"
+      ],
+      "date": "2026-01-28",
+      "audioUrl": "audio/01 Set winter graou.mp3",
+      "coverUrl": "images/01 Set winter graou.jpg",
+      "tracklist": [
+        {
+          "time": "00:00",
+          "title": "Unknown"
+        }
+      ]
+    },
+    {
       "id": "01_Set_Boiler",
       "title": "Set Boiler",
       "duration": 1633,
@@ -10,7 +120,7 @@
         "Frapcore",
         "Uptempo"
       ],
-      "date": "2026-03-01",
+      "date": "2025-11-16",
       "audioUrl": "audio/01_Set_Boiler.mp3",
       "coverUrl": "images/01_Set_Boiler.jpg",
       "tracklist": [
