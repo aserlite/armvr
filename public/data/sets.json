@@ -1,0 +1,24 @@
+{
+  "sets": [
+    {
+      "id": "01_Set_Boiler",
+      "title": "Set Boiler",
+      "duration": 1633,
+      "tags": [
+        "Hardcore",
+        "Gabber",
+        "Frapcore",
+        "Uptempo"
+      ],
+      "date": "2026-03-01",
+      "audioUrl": "audio/01_Set_Boiler.mp3",
+      "coverUrl": "images/01_Set_Boiler.jpg",
+      "tracklist": [
+        {
+          "time": "00:00",
+          "title": "Unknown"
+        }
+      ]
+    }
+  ]
+}
