@@ -87,6 +87,46 @@ export default function GlobalPlayer() {
         }
     }, [isPlaying, isLoading]);
 
+    useEffect(() => {
+        if ('mediaSession' in navigator && currentSet) {
+            navigator.mediaSession.metadata = new window.MediaMetadata({
+                title: currentSet.title,
+                artist: 'ARMVR',
+                album: 'ARMVR Sets',
+                artwork: [
+                    {
+                        src: `${import.meta.env.BASE_URL}${currentSet.coverUrl}`,
+                        sizes: '512x512',
+                        type: 'image/png'
+                    }
+                ]
+            });
+
+            navigator.mediaSession.setActionHandler('play', () => {
+                if (wavesurfer.current) wavesurfer.current.play();
+            });
+
+            navigator.mediaSession.setActionHandler('pause', () => {
+                if (wavesurfer.current) wavesurfer.current.pause();
+            });
+
+            navigator.mediaSession.setActionHandler('seekbackward', () => {
+                if (wavesurfer.current) {
+                    const currentTime = wavesurfer.current.getCurrentTime();
+                    wavesurfer.current.setTime(Math.max(0, currentTime - 15));
+                }
+            });
+
+            navigator.mediaSession.setActionHandler('seekforward', () => {
+                if (wavesurfer.current) {
+                    const currentTime = wavesurfer.current.getCurrentTime();
+                    const duration = wavesurfer.current.getDuration();
+                    wavesurfer.current.setTime(Math.min(duration, currentTime + 15));
+                }
+            });
+        }
+    }, [currentSet]);
+
     const togglePlay = () => {
         if (!isLoading) setIsPlaying(!isPlaying);
     };
