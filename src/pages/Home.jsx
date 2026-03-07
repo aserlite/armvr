@@ -50,7 +50,7 @@ export default function Home() {
     return (
         <div className="home-page">
             <header className="home-header">
-                <h1>Collection</h1>
+                <h1>ARMVR</h1>
 
                 <div className="controls-bar">
                     <div className="search-wrapper">
