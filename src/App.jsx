@@ -8,6 +8,7 @@ import GlobalPlayer from './components/GlobalPlayer';
 import GlobalVolume from './components/GlobalVolume';
 
 import './App.css';
+import Visualizer from "./pages/Visualiser.jsx";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/set/:id" element={<SetPage />} />
+                        <Route path="/visualizer" element={<Visualizer />} />
                     </Routes>
 
                     <GlobalVolume />

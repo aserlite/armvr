@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import SetCard from '../components/SetCard';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search, SlidersHorizontal, Monitor } from 'lucide-react';
+import {Link} from "react-router-dom";
 
 export default function Home() {
     const [sets, setSets] = useState([]);
@@ -50,8 +51,13 @@ export default function Home() {
     return (
         <div className="home-page">
             <header className="home-header">
-                <h1>ARMVR</h1>
-
+                <div className="header-top">
+                    <h1>ARMVR</h1>
+                    <Link to="/visualizer" className="tv-mode-btn">
+                        <Monitor size={18} />
+                        <span className="tv-mode-text">Mode TV</span>
+                    </Link>
+                </div>
                 <div className="controls-bar">
                     <div className="search-wrapper">
                         <Search size={20} className="control-icon" />

@@ -6,8 +6,11 @@ import { Play, Pause, Loader2 } from 'lucide-react';
 export default function GlobalPlayer() {
     const {
         currentSet, isPlaying, setIsPlaying, isLoading, setIsLoading,
-        currentTime, setCurrentTime, seekRequest, setSeekRequest, volume
+        currentTime, setCurrentTime, seekRequest, setSeekRequest, volume,
+        setAudioAnalyser
     } = usePlayer();
+
+    const audioCtxRef = useRef(null);
 
     const containerRef = useRef(null);
     const wavesurfer = useRef(null);
@@ -52,11 +55,44 @@ export default function GlobalPlayer() {
             }
         });
 
-        wavesurfer.current.on('play', () => setIsPlaying(true));
+        wavesurfer.current.on('play', () => {
+            setIsPlaying(true);
+
+            try {
+                if (!audioCtxRef.current) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtxRef.current = new AudioContext();
+
+                    const analyser = audioCtxRef.current.createAnalyser();
+                    analyser.fftSize = 256;
+
+                    const mediaElt = wavesurfer.current.getMediaElement();
+                    const source = audioCtxRef.current.createMediaElementSource(mediaElt);
+                    source.connect(analyser);
+                    analyser.connect(audioCtxRef.current.destination);
+
+                    setAudioAnalyser(analyser);
+                }
+
+                if (audioCtxRef.current.state === 'suspended') {
+                    audioCtxRef.current.resume();
+                }
+            } catch (err) {
+                console.warn("Visualizer audio inactif (sécurité navigateur) :", err);
+            }
+        });
+
         wavesurfer.current.on('pause', () => setIsPlaying(false));
+
         wavesurfer.current.on('finish', () => setIsPlaying(false));
 
         return () => {
+            if (audioCtxRef.current) {
+                audioCtxRef.current.close();
+                audioCtxRef.current = null;
+            }
+            setAudioAnalyser(null);
+
             if (wavesurfer.current) wavesurfer.current.destroy();
         };
     }, [currentSet]);

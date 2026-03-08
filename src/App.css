@@ -54,12 +54,41 @@ a:hover {
   padding: 2rem;
 }
 
-header h1 {
-  text-transform: uppercase;
-  font-weight: 900;
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 1rem;
+}
+
+.header-top h1 {
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.tv-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.tv-mode-btn:hover {
+  background: rgba(255, 85, 0, 0.1);
+  color: var(--orange-accent);
+  border-color: var(--orange-accent);
+  box-shadow: 0 0 15px rgba(255, 85, 0, 0.2);
+  text-shadow: none;
 }
 
 @keyframes spin {

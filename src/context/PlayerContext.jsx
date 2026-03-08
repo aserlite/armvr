@@ -24,6 +24,8 @@ export function PlayerProvider({ children }) {
     });
     const [seekRequest, setSeekRequest] = useState(null);
 
+    const [audioAnalyser, setAudioAnalyser] = useState(null);
+
     useEffect(() => {
         if (currentSet) {
             localStorage.setItem('dj-current-set', JSON.stringify(currentSet));
@@ -57,7 +59,8 @@ export function PlayerProvider({ children }) {
             isLoading, setIsLoading,
             currentTime, setCurrentTime,
             seekRequest, setSeekRequest,
-            volume, setVolume
+            volume, setVolume,
+            audioAnalyser, setAudioAnalyser
         }}>
             {children}
         </PlayerContext.Provider>
