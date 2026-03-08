@@ -142,7 +142,6 @@ header h1 {
 }
 
 
-/* --- PAGE D'ACCUEIL (LISTE DES SETS) --- */
 .sets-list {
   display: flex;
   flex-direction: column;
@@ -341,6 +340,34 @@ header h1 {
   font-weight: 600;
 }
 
+.set-page-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.share-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top:1rem;
+}
+
+.share-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--orange-accent);
+  border-color: var(--orange-accent);
+}
 
 /* --- GLOBAL PLAYER (BAS DROITE) --- */
 @keyframes slideIn {

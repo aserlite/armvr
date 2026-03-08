@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { usePlayer } from '../context/PlayerContext';
-import { Play, Pause, Loader2 } from 'lucide-react';
+import { Play, Pause, Loader2, Share2, Check } from 'lucide-react';
 
 const parseTimeToSeconds = (timeStr) => {
     if (!timeStr) return 0;
@@ -15,6 +15,9 @@ export default function SetPage() {
     const { id } = useParams();
     const [set, setSet] = useState(null);
 
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [copied, setCopied] = useState(false);
+
     const { currentSet, isPlaying, playSet, isLoading, currentTime, setSeekRequest } = usePlayer();
 
     useEffect(() => {
@@ -25,6 +28,28 @@ export default function SetPage() {
                 setSet(foundSet);
             });
     }, [id]);
+
+    useEffect(() => {
+        const t = searchParams.get('t');
+
+        if (set && t) {
+            const timeInSeconds = parseInt(t, 10);
+            if (currentSet?.id !== set.id) {
+                playSet(set);
+            }
+            setSeekRequest(timeInSeconds);
+            searchParams.delete('t');
+            setSearchParams(searchParams, { replace: true });
+        }
+    }, [set, searchParams, currentSet?.id, playSet, setSeekRequest, setSearchParams]);
+
+    const handleShare = () => {
+        const baseUrl = window.location.origin + window.location.pathname;
+        const shareUrl = `${baseUrl}?t=${isCurrentSet ? currentTime : 0}`;
+        navigator.clipboard.writeText(shareUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
 
     if (!set) return <div className="loading">Chargement...</div>;
 
@@ -64,19 +89,29 @@ export default function SetPage() {
                         {set.tags.map((tag, idx) => <span key={idx} className="tag">{tag}</span>)}
                     </div>
 
-                    <button
-                        className="play-btn-giant"
-                        onClick={() => playSet(set)}
-                        style={{ opacity: isCurrentSet && isLoading ? 0.5 : 1 }}
-                    >
-                        {isCurrentSet && isLoading ? (
-                            <Loader2 size={36} fill="none" stroke="currentColor" className="animate-spin" />
-                        ) : isCurrentSet && isPlaying ? (
-                            <Pause size={36} fill="currentColor" stroke="none" />
-                        ) : (
-                            <Play size={36} fill="currentColor" stroke="none" style={{ marginLeft: '4px' }} />
-                        )}
-                    </button>
+                    <div className="set-page-actions">
+                        <button
+                            className="play-btn-giant"
+                            onClick={() => playSet(set)}
+                            style={{ opacity: isCurrentSet && isLoading ? 0.5 : 1 }}
+                        >
+                            {isCurrentSet && isLoading ? (
+                                <Loader2 size={36} fill="none" stroke="currentColor" className="animate-spin" />
+                            ) : isCurrentSet && isPlaying ? (
+                                <Pause size={36} fill="currentColor" stroke="none" />
+                            ) : (
+                                <Play size={36} fill="currentColor" stroke="none" style={{ marginLeft: '4px' }} />
+                            )}
+                        </button>
+
+                        <button
+                            className="share-btn"
+                            onClick={handleShare}
+                            title="Copier le lien à ce moment précis"
+                        >
+                            {copied ? <Check size={24} color="var(--orange-accent)" /> : <Share2 size={24} />}
+                        </button>
+                    </div>
                 </div>
             </div>
 
