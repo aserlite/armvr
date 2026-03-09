@@ -25,6 +25,7 @@ export default function Visualizer() {
     const navigate = useNavigate();
 
     const [hudVisible, setHudVisible] = useState(true);
+    const [isForceHidden, setIsForceHidden] = useState(false);
 
     const [vizType, setVizType] = useState(() => {
         return localStorage.getItem('dj-viz-type') || 'bars';
@@ -293,7 +294,7 @@ export default function Visualizer() {
                 playSet(currentSet);
             }
             if (event.code === 'KeyH') {
-                setHudVisible(prev => !prev);
+                setIsForceHidden(prev => !prev);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -323,23 +324,34 @@ export default function Visualizer() {
         let timeoutId;
 
         const resetTimer = () => {
+            if (isForceHidden) return;
+
             setHudVisible(true);
             clearTimeout(timeoutId);
             timeoutId = setTimeout(() => {
                 setHudVisible(false);
             }, 10000);
         };
+
         window.addEventListener('mousemove', resetTimer);
         window.addEventListener('click', resetTimer);
 
-        resetTimer();
+        if (!isForceHidden) resetTimer();
 
         return () => {
             window.removeEventListener('mousemove', resetTimer);
             window.removeEventListener('click', resetTimer);
             clearTimeout(timeoutId);
         };
-    }, []);
+    }, [isForceHidden]);
+
+    const toggleForceHide = (e) => {
+        e.stopPropagation();
+
+        const newForceState = !isForceHidden;
+        setIsForceHidden(newForceState);
+        setHudVisible(!newForceState);
+    };
 
     const totalDuration = duration || currentSet.duration || 1;
     const progressPercent = (currentTime / totalDuration) * 100;
@@ -369,7 +381,7 @@ export default function Visualizer() {
 
             <button
                 className={`hud-toggle-btn ${!hudVisible ? 'hud-hidden' : ''}`}
-                onClick={() => setHudVisible(!hudVisible)}
+                onClick={toggleForceHide} /* --- NOUVEAU --- */
                 title="Cacher/Afficher l'interface (Touche H)"
             >
                 {hudVisible ? <EyeOff size={24} /> : <Eye size={24} />}
