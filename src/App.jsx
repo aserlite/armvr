@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { PlayerProvider } from './context/PlayerContext';
 
 import Home from './pages/Home';
@@ -13,7 +13,7 @@ import Visualizer from "./pages/Visualiser.jsx";
 function App() {
     return (
         <PlayerProvider>
-            <Router basename={import.meta.env.BASE_URL}>
+            <Router>
                 <div className="app-container">
 
                     <Routes>
