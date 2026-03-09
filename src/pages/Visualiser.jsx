@@ -12,8 +12,15 @@ const parseTimeToSeconds = (timeStr) => {
     return 0;
 };
 
+const formatTime = (timeInSeconds) => {
+    if (!timeInSeconds || isNaN(timeInSeconds)) return "00:00";
+    const m = Math.floor(timeInSeconds / 60);
+    const s = Math.floor(timeInSeconds % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+};
+
 export default function Visualizer() {
-    const { currentSet, isPlaying, isLoading, audioAnalyser, playSet, currentTime } = usePlayer();
+    const { currentSet, isPlaying, isLoading, audioAnalyser, playSet, currentTime, setSeekRequest, duration } = usePlayer();
     const canvasRef = useRef(null);
     const navigate = useNavigate();
 
@@ -25,6 +32,7 @@ export default function Visualizer() {
 
     const [currentTrackName, setCurrentTrackName] = useState("");
     const [trackCover, setTrackCover] = useState("");
+    const [themeColor, setThemeColor] = useState({ r: 255, g: 85, b: 0 });
 
     useEffect(() => {
         localStorage.setItem('dj-viz-type', vizType);
@@ -76,13 +84,58 @@ export default function Visualizer() {
                     setTrackCover(defaultCover);
                 }
             } catch (error) {
-                console.error(error);
                 setTrackCover(defaultCover);
             }
         };
 
         fetchCover();
     }, [currentTrackName, currentSet]);
+
+    useEffect(() => {
+        const imageUrl = trackCover || (currentSet ? `${import.meta.env.BASE_URL}${currentSet.coverUrl}` : null);
+        if (!imageUrl) return;
+
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, 64, 64);
+                const data = ctx.getImageData(0, 0, 64, 64).data;
+
+                let r = 0, g = 0, b = 0, count = 0;
+                for (let i = 0; i < data.length; i += 4) {
+                    if (data[i] > 20 || data[i+1] > 20 || data[i+2] > 20) {
+                        r += data[i];
+                        g += data[i+1];
+                        b += data[i+2];
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    r = Math.floor(r / count);
+                    g = Math.floor(g / count);
+                    b = Math.floor(b / count);
+
+                    const max = Math.max(r, g, b);
+                    const boost = max > 0 ? (255 / max) * 0.95 : 1;
+
+                    setThemeColor({
+                        r: Math.min(255, Math.floor(r * boost)),
+                        g: Math.min(255, Math.floor(g * boost)),
+                        b: Math.min(255, Math.floor(b * boost))
+                    });
+                }
+            } catch (e) {
+                setThemeColor({ r: 255, g: 85, b: 0 });
+            }
+        };
+        img.onerror = () => setThemeColor({ r: 255, g: 85, b: 0 });
+        img.src = imageUrl;
+    }, [trackCover, currentSet]);
 
     useEffect(() => {
         if (!audioAnalyser || !canvasRef.current) return;
@@ -108,17 +161,20 @@ export default function Visualizer() {
 
             const usefulSpectrumPercent = 0.7;
             const usefulBufferLength = Math.floor(bufferLength * usefulSpectrumPercent);
-
             const sliceWidth = canvas.width / (usefulBufferLength - 1);
             let x = 0;
+
+            const { r, g, b } = themeColor;
+            const baseColor = `rgb(${r}, ${g}, ${b})`;
+
+            ctx.shadowColor = baseColor;
+            ctx.shadowBlur = 12;
 
             if (vizType === 'bars') {
                 for (let i = 0; i < usefulBufferLength; i++) {
                     const barHeight = dataArray[i] * 3;
-                    const r = 255 - (i / usefulSpectrumPercent); // Dégradé adapté
-                    const g = 85 + (i / 2);
-                    const b = i * 2;
-                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    const alpha = Math.max(0.3, 1 - (i / usefulBufferLength) * 0.5);
+                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
                     ctx.fillRect(x, canvas.height - barHeight, (canvas.width/usefulBufferLength) - 2, barHeight);
                     x += canvas.width/usefulBufferLength;
                 }
@@ -128,12 +184,10 @@ export default function Visualizer() {
                 for (let i = 0; i < usefulBufferLength; i++) {
                     const barHeight = dataArray[i] * 1.5;
                     const angle = (i * 2 * Math.PI) / usefulBufferLength;
-                    const r = 255 - ((i * 2) / usefulSpectrumPercent);
-                    const g = 85 + (i / 2);
-                    const b = i * 2;
+                    const alpha = Math.max(0.4, 1 - (i / usefulBufferLength) * 0.6);
 
-                    ctx.strokeStyle = `rgb(${r},${g},${b})`;
-                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                    ctx.lineWidth = 6;
                     ctx.lineCap = "round";
 
                     ctx.beginPath();
@@ -153,14 +207,17 @@ export default function Visualizer() {
                 }
                 ctx.lineTo(canvas.width, canvas.height);
                 ctx.closePath();
-                const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                grad.addColorStop(0, "rgba(255, 85, 0, 1)");
-                grad.addColorStop(0.25, "rgba(255, 85, 100, 0.9)");
-                grad.addColorStop(1, "rgba(5, 1, 148, 0.8)");
+
+                const grad = ctx.createLinearGradient(0, canvas.height * 0.4, 0, canvas.height);
+                grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.8)`);
+                grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.1)`);
+
                 ctx.fillStyle = grad;
                 ctx.fill();
             }
             else if (vizType === 'neon-line') {
+                ctx.shadowBlur = 20;
+
                 ctx.beginPath();
                 ctx.moveTo(0, cy);
                 for (let i = 0; i < usefulBufferLength; i++) {
@@ -170,10 +227,8 @@ export default function Visualizer() {
                     x += sliceWidth;
                 }
 
-                ctx.strokeStyle = "#ff5500";
+                ctx.strokeStyle = baseColor;
                 ctx.lineWidth = 8;
-                ctx.shadowBlur = 40;
-                ctx.shadowColor = "#ff5500";
                 ctx.lineCap = "round";
                 ctx.lineJoin = "round";
                 ctx.stroke();
@@ -202,13 +257,13 @@ export default function Visualizer() {
 
                 ctx.beginPath();
                 ctx.arc(cx, cy, bassRadius, 0, 2 * Math.PI);
-                ctx.strokeStyle = `rgba(255, 85, 0, ${bass / 255})`;
+                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${bass / 255})`;
                 ctx.lineWidth = 8;
                 ctx.stroke();
 
                 ctx.beginPath();
                 ctx.arc(cx, cy, midRadius, 0, 2 * Math.PI);
-                ctx.strokeStyle = `rgba(5, 1, 255, ${mid / 255})`;
+                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${(mid / 255) * 0.5})`;
                 ctx.lineWidth = 4;
                 ctx.stroke();
             }
@@ -217,19 +272,19 @@ export default function Visualizer() {
                 let x = 0;
                 for (let i = 0; i < usefulBufferLength; i++) {
                     const barHeight = dataArray[i] * 1.5;
-                    const r = 255 - i;
-                    const g = 85 + (i / 2);
-                    const b = i * 2;
-                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    const alpha = Math.max(0.3, 1 - (i / usefulBufferLength) * 0.5);
+                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
                     ctx.fillRect(x, cy - barHeight, barWidth - 2, barHeight * 2);
                     x += barWidth;
                 }
             }
+
+            ctx.shadowBlur = 0;
         };
 
         renderFrame();
         return () => cancelAnimationFrame(animationId);
-    }, [audioAnalyser, vizType]);
+    }, [audioAnalyser, vizType, themeColor]);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -245,6 +300,16 @@ export default function Visualizer() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [playSet, currentSet]);
 
+    const handleSeek = (e) => {
+        if (!setSeekRequest) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const percent = clickX / rect.width;
+
+        const totalDuration = duration || currentSet?.duration || 1;
+        setSeekRequest(percent * totalDuration);
+    };
+
     if (!currentSet) {
         return (
             <div className="visualizer-page empty">
@@ -254,11 +319,14 @@ export default function Visualizer() {
         );
     }
 
+    const totalDuration = duration || currentSet.duration || 1;
+    const progressPercent = (currentTime / totalDuration) * 100;
+
     return (
         <div className="visualizer-page">
             <div
                 className="viz-background"
-                style={{ backgroundImage: `url(${import.meta.env.BASE_URL}${currentSet.coverUrl})` }}
+                style={{ backgroundImage: `url('${import.meta.env.BASE_URL}${currentSet.coverUrl}')` }}
             />
             <div className="viz-overlay" />
 
@@ -287,51 +355,82 @@ export default function Visualizer() {
                     <X size={32} />
                 </button>
 
-                <div className="viz-info">
-                    <img src={`${import.meta.env.BASE_URL}${currentSet.coverUrl}`} alt="cover" className="viz-cover" />
-                    <div className="viz-text" style={{ flex: 1 }}>
+                <div className="viz-bottom-section">
 
-                        <h1>{currentSet.title}</h1>
+                    <div className="viz-info">
 
-                        {currentTrackName && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ccc', marginBottom: '0.8rem' }}>
-                                <Music size={16} />
-                                <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{currentTrackName}</span>
-                            </div>
-                        )}
+                        <div className="viz-left-block">
+                            <img src={`${import.meta.env.BASE_URL}${currentSet.coverUrl}`} alt="cover" className="viz-cover" />
+                            <div className="viz-text">
+                                <h1 className="truncate-text">{currentSet.title}</h1>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
-                            <button
-                                className="play-btn"
-                                style={{ background: 'var(--orange-accent)', color: 'white', border: 'none', opacity: isLoading ? 0.7 : 1 }}
-                                onClick={() => !isLoading && playSet(currentSet)}
-                            >
-                                {isLoading ? (
-                                    <Loader2 size={20} className="animate-spin" />
-                                ) : isPlaying ? (
-                                    <Pause size={20} fill="currentColor" />
-                                ) : (
-                                    <Play size={20} fill="currentColor" />
+                                {currentTrackName && (
+                                    <div className="track-name-container">
+                                        <Music size={16} className="shrink-0" />
+                                        <div className="marquee-container">
+                                            <div className="marquee-content">
+                                                <span className="marquee-text">{currentTrackName} &nbsp;&nbsp;•&nbsp;&nbsp; </span>
+                                                <span className="marquee-text">{currentTrackName} &nbsp;&nbsp;•&nbsp;&nbsp; </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 )}
-                            </button>
-                            <p style={{ margin: 0, opacity: 0.8 }}>
-                                {isLoading ? "Chargement..." : isPlaying ? "En lecture" : "En pause"}
-                            </p>
-                        </div>
-                    </div>
 
-                    <select
-                        className="viz-selector"
-                        value={vizType}
-                        onChange={(e) => setVizType(e.target.value)}
-                    >
-                        <option value="bars">Barres classiques</option>
-                        <option value="mirrored-bars">Barres symétriques</option>
-                        <option value="radial">Cercle Radial</option>
-                        <option value="wave">Vague pleine</option>
-                        <option value="neon-line">Ligne Néon</option>
-                        <option value="pulse-circles">Cercles Pulsants</option>
-                    </select>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+                                    <button
+                                        className="play-btn"
+                                        style={{ background: 'var(--orange-accent)', color: 'white', border: 'none', opacity: isLoading ? 0.7 : 1 }}
+                                        onClick={() => !isLoading && playSet(currentSet)}
+                                    >
+                                        {isLoading ? (
+                                            <Loader2 size={20} className="animate-spin" />
+                                        ) : isPlaying ? (
+                                            <Pause size={20} fill="currentColor" />
+                                        ) : (
+                                            <Play size={20} fill="currentColor" />
+                                        )}
+                                    </button>
+                                    <p style={{ margin: 0, opacity: 0.8 }}>
+                                        {isLoading ? "Chargement..." : isPlaying ? "En lecture" : "En pause"}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="viz-center-block">
+                            <div className="viz-progress-wrapper">
+                                <span className="viz-time">{formatTime(currentTime)}</span>
+                                <div className="viz-progress-container" onClick={handleSeek}>
+                                    <div className="viz-progress-track">
+                                        <div
+                                            className="viz-progress-fill"
+                                            style={{
+                                                width: `${progressPercent}%`,
+                                                background: 'var(--orange-accent)',
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <span className="viz-time">{formatTime(totalDuration)}</span>
+                            </div>
+                        </div>
+
+                        <div className="viz-right-block">
+                            <select
+                                className="viz-selector"
+                                value={vizType}
+                                onChange={(e) => setVizType(e.target.value)}
+                            >
+                                <option value="bars">Barres classiques</option>
+                                <option value="mirrored-bars">Barres symétriques</option>
+                                <option value="radial">Cercle Radial</option>
+                                <option value="wave">Vague pleine</option>
+                                <option value="neon-line">Ligne Néon</option>
+                                <option value="pulse-circles">Cercles Pulsants</option>
+                            </select>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
