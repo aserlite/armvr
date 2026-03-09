@@ -319,11 +319,36 @@ export default function Visualizer() {
         );
     }
 
+    useEffect(() => {
+        let timeoutId;
+
+        const resetTimer = () => {
+            setHudVisible(true);
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                setHudVisible(false);
+            }, 10000);
+        };
+        window.addEventListener('mousemove', resetTimer);
+        window.addEventListener('click', resetTimer);
+
+        resetTimer();
+
+        return () => {
+            window.removeEventListener('mousemove', resetTimer);
+            window.removeEventListener('click', resetTimer);
+            clearTimeout(timeoutId);
+        };
+    }, []);
+
     const totalDuration = duration || currentSet.duration || 1;
     const progressPercent = (currentTime / totalDuration) * 100;
 
     return (
-        <div className="visualizer-page">
+        <div
+            className="visualizer-page"
+            style={{ cursor: hudVisible ? 'default' : 'none' }}
+        >
             <div
                 className="viz-background"
                 style={{ backgroundImage: `url('${import.meta.env.BASE_URL}${currentSet.coverUrl}')` }}
