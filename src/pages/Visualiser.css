@@ -216,6 +216,11 @@
     z-index: 100;
 }
 
+.minimal-music-icon {
+    width: 18px;
+    height: 18px;
+}
+
 .minimal-track-info.visible {
     opacity: 1;
 }
@@ -465,5 +470,9 @@
         width: 25vh;
         height: 25vh;
         top: 38%;
+    }
+    .minimal-music-icon {
+        width: 34px;
+        height: 34px;
     }
 }

@@ -375,7 +375,7 @@ export default function Visualizer() {
             </div>
 
             <div className={`minimal-track-info ${!hudVisible && currentTrackName ? 'visible' : ''}`}>
-                <Music size={18} />
+                <Music className="minimal-music-icon" />
                 <span>{currentTrackName}</span>
             </div>
 
