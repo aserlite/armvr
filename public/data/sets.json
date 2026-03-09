@@ -1,6 +1,90 @@
 {
   "sets": [
     {
+      "id": "01_Set_Boiler",
+      "title": "Set Boiler",
+      "duration": 1633,
+      "tags": [
+        "Hardcore",
+        "Gabber",
+        "Frapcore",
+        "Uptempo"
+      ],
+      "date": "2025-11-16",
+      "audioUrl": "audio/01_Set_Boiler.mp3",
+      "coverUrl": "images/01_Set_Boiler.jpg",
+      "tracklist": [
+        {
+          "time": "00:00",
+          "title": "WHAAAT?? (YES!!! THE KICK IS ANVIL FROM M1N3CR4FT) - Sickomode"
+        },
+        {
+          "time": "02:16",
+          "title": "Burning Down - Dual Damage"
+        },
+        {
+          "time": "03:32",
+          "title": "How Do You Do - Zak Conner, R0pps"
+        },
+        {
+          "time": "04:25",
+          "title": "Don't Sleep - Slaughterhouse"
+        },
+        {
+          "time": "05:12",
+          "title": "Asbak Anthem - Vieze Azbak"
+        },
+        {
+          "time": "06:16",
+          "title": "Stop the genocide - Von Bikrav, Dahabflex"
+        },
+        {
+          "time": "07:46",
+          "title": "Pas de 120 bpm - Von Bikrav"
+        },
+        {
+          "time": "09:00",
+          "title": "Baise tous les traitres - Von Bikrav"
+        },
+        {
+          "time": "10:15",
+          "title": "Mon RS te baise ta mère - Von Bikrav"
+        },
+        {
+          "time": "12:45",
+          "title": "93 Hardcore - Von Bikrav"
+        },
+        {
+          "time": "14:37",
+          "title": "Teuf - Von Bikrav"
+        },
+        {
+          "time": "15:39",
+          "title": "On en veut plus - Roland Cristal, Yoshiko"
+        },
+        {
+          "time": "17:40",
+          "title": "Tokyo - The Dope Doctor"
+        },
+        {
+          "time": "18:26",
+          "title": "Pump this party - Vieze Azbak, Dimitri K"
+        },
+        {
+          "time": "19:44",
+          "title": "Break your legs - Het Pompstation"
+        },
+        {
+          "time": "21:00",
+          "title": "Here 2 rage - Het Pompstation"
+        },
+        {
+          "time": "23:38",
+          "title": "Bientot - Von Bikrav"
+        }
+      ]
+    },
+    {
       "id": "01_Set_Welcome",
       "title": "Set Welcome",
       "duration": 1762,
@@ -10,7 +94,7 @@
         "Hardcore"
       ],
       "date": "2025-09-21",
-      "audioUrl": "audio/01 Set Welcome.mp3",
+      "audioUrl": "audio/01_Set_Welcome.mp3",
       "coverUrl": "images/01_Set_Welcome.jpg",
       "tracklist": [
         {
@@ -97,96 +181,12 @@
         "Frapcore"
       ],
       "date": "2026-01-28",
-      "audioUrl": "audio/01 Set winter graou.mp3",
+      "audioUrl": "audio/01_Set_winter_graou.mp3",
       "coverUrl": "images/01_Set_winter_graou.jpg",
       "tracklist": [
         {
           "time": "00:00",
           "title": "Unknown"
-        }
-      ]
-    },
-    {
-      "id": "01_Set_Boiler",
-      "title": "Set Boiler",
-      "duration": 1633,
-      "tags": [
-        "Hardcore",
-        "Gabber",
-        "Frapcore",
-        "Uptempo"
-      ],
-      "date": "2025-11-16",
-      "audioUrl": "audio/01_Set_Boiler.mp3",
-      "coverUrl": "images/01_Set_Boiler.jpg",
-      "tracklist": [
-        {
-          "time": "00:00",
-          "title": "WHAAAT?? (YES!!! THE KICK IS ANVIL FROM M1N3CR4FT) - Sickomode"
-        },
-        {
-          "time": "02:16",
-          "title": "Burning Down - Dual Damage"
-        },
-        {
-          "time": "03:32",
-          "title": "How Do You Do - Zak Conner, R0pps"
-        },
-        {
-          "time": "04:25",
-          "title": "Don't Sleep - Slaughterhouse"
-        },
-        {
-          "time": "05:12",
-          "title": "Asbak Anthem - Vieze Azbak"
-        },
-        {
-          "time": "06:16",
-          "title": "Stop the genocide - Von Bikrav, Dahabflex"
-        },
-        {
-          "time": "07:46",
-          "title": "Pas de 120 bpm - Von Bikrav"
-        },
-        {
-          "time": "09:00",
-          "title": "Baise tous les traitres - Von Bikrav"
-        },
-        {
-          "time": "10:15",
-          "title": "Mon RS te baise ta mère - Von Bikrav"
-        },
-        {
-          "time": "12:45",
-          "title": "93 Hardcore - Von Bikrav"
-        },
-        {
-          "time": "14:37",
-          "title": "Teuf - Von Bikrav"
-        },
-        {
-          "time": "15:39",
-          "title": "On en veut plus - Roland Cristal, Yoshiko"
-        },
-        {
-          "time": "17:40",
-          "title": "Tokyo - The Dope Doctor"
-        },
-        {
-          "time": "18:26",
-          "title": "Pump this party - Vieze Azbak, Dimitri K"
-        },
-        {
-          "time": "19:44",
-          "title": "Break your legs - Het Pompstation"
-        },
-        {
-          "time": "21:00",
-          "title": "Here 2 rage - Het Pompstation"
-        },
-        {
-          "time": "23:38",
-          "title": "Bientot - Von Bikrav"
         }
       ]
     }
