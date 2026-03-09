@@ -13,7 +13,7 @@
     );
     background-attachment: fixed;
     background-repeat: no-repeat;
-    min-height: 100vh;    z-index: 9999;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -171,7 +171,7 @@
 
 .viz-vinyl-container {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 30vh;
@@ -183,7 +183,6 @@
 }
 
 .viz-vinyl-container::before {
-    /* Les reflets du vinyle */
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -250,4 +249,32 @@
     background: #050110;
     color: white;
     padding: 10px;
+}
+
+.minimal-track-info {
+    position: absolute;
+    top: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-family: var(--font-main);
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    z-index: 100;
+}
+
+.minimal-track-info.visible {
+    opacity: 1;
 }
