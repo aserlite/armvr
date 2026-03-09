@@ -4,8 +4,16 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #000;
-    z-index: 9999;
+    background-color: var(--bg-darker);
+    background-image: radial-gradient(
+            circle at 50% 50%,
+            rgba(26, 0, 247, 0.25) 0%,
+            rgba(5, 1, 148, 0.1) 40%,
+            transparent 75%
+    );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;    z-index: 9999;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -108,4 +116,138 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     text-shadow: 0 2px 5px rgba(0,0,0,1);
+}
+
+.viz-hud {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.viz-hud > * {
+    pointer-events: auto;
+}
+
+.viz-hud.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+.viz-hud.hidden > * {
+    pointer-events: none;
+}
+
+.hud-toggle-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 999;
+    transition: all 0.3s;
+}
+
+.hud-toggle-btn:hover {
+    background: rgba(255, 85, 0, 0.5);
+    transform: scale(1.1);
+}
+
+.hud-toggle-btn.hud-hidden {
+    opacity: 0.3;
+}
+.hud-toggle-btn.hud-hidden:hover {
+    opacity: 1;
+}
+
+.viz-vinyl-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30vh;
+    height: 30vh;
+    border-radius: 50%;
+    border: 8px solid #0a0a0a;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.8);
+    z-index: 5;
+}
+
+.viz-vinyl-container::before {
+    /* Les reflets du vinyle */
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+            rgba(255,255,255,0.1) 0deg,
+            transparent 45deg,
+            rgba(255,255,255,0.1) 90deg,
+            transparent 135deg,
+            rgba(255,255,255,0.1) 180deg,
+            transparent 225deg,
+            rgba(255,255,255,0.1) 270deg,
+            transparent 315deg,
+            rgba(255,255,255,0.1) 360deg
+    );
+    pointer-events: none;
+}
+
+.viz-vinyl-container.spinning {
+    animation: spin-vinyl 4s linear infinite;
+}
+
+@keyframes spin-vinyl {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.viz-vinyl {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    opacity: 0.9;
+}
+
+.viz-vinyl-hole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: #111;
+    border-radius: 50%;
+    border: 2px solid #222;
+}
+
+.viz-selector {
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: 1px solid var(--orange-accent);
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    font-family: var(--font-main);
+    font-weight: 600;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    appearance: auto;
+}
+
+.viz-selector option {
+    background: #050110;
+    color: white;
+    padding: 10px;
 }
