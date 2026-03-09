@@ -156,9 +156,10 @@ export default function Visualizer() {
 
             audioAnalyser.getByteFrequencyData(dataArray);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+            const isMobile = window.innerWidth <= 768;
             const cx = canvas.width / 2;
-            const cy = canvas.height * 0.45;
+            const cy = canvas.height * (window.innerWidth <= 768 ? 0.38 : 0.45);
+            const amp = isMobile ? 0.5 : 1;
 
             const usefulSpectrumPercent = 0.7;
             const usefulBufferLength = Math.floor(bufferLength * usefulSpectrumPercent);
@@ -173,7 +174,7 @@ export default function Visualizer() {
 
             if (vizType === 'bars') {
                 for (let i = 0; i < usefulBufferLength; i++) {
-                    const barHeight = dataArray[i] * 3;
+                    const barHeight = dataArray[i] * 3 * amp;
                     const alpha = Math.max(0.3, 1 - (i / usefulBufferLength) * 0.5);
                     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
                     ctx.fillRect(x, canvas.height - barHeight, (canvas.width/usefulBufferLength) - 2, barHeight);
@@ -181,7 +182,7 @@ export default function Visualizer() {
                 }
             }
             else if (vizType === 'radial') {
-                const radius = Math.min(cx, cy) * 0.45;
+                const radius = canvas.height * (isMobile ? 0.14 : 0.17);
                 for (let i = 0; i < usefulBufferLength; i++) {
                     const barHeight = dataArray[i] * 1.5;
                     const angle = (i * 2 * Math.PI) / usefulBufferLength;
@@ -202,7 +203,7 @@ export default function Visualizer() {
                 ctx.moveTo(0, canvas.height);
                 for (let i = 0; i < usefulBufferLength; i++) {
                     const v = dataArray[i] / 255;
-                    const y = canvas.height - (v * canvas.height * 0.6);
+                    const y = canvas.height - (v * canvas.height * (isMobile ? 0.4 : 0.6));
                     ctx.lineTo(x, y);
                     x += sliceWidth;
                 }
@@ -223,7 +224,7 @@ export default function Visualizer() {
                 ctx.moveTo(0, cy);
                 for (let i = 0; i < usefulBufferLength; i++) {
                     const v = dataArray[i] / 255;
-                    const y = cy - (v * canvas.height * 0.3);
+                    const y = cy - (v * canvas.height * (isMobile ? 0.15 : 0.3));
                     ctx.lineTo(x, y);
                     x += sliceWidth;
                 }
@@ -253,8 +254,8 @@ export default function Visualizer() {
                 const bass = (dataArray[0] + dataArray[1] + dataArray[2] + dataArray[3]) / 4;
                 const mid = dataArray[Math.floor(usefulBufferLength / 2)];
 
-                const bassRadius = (bass / 255) * (canvas.height * 0.4);
-                const midRadius = (mid / 255) * (canvas.height * 0.6);
+                const bassRadius = (bass / 255) * (canvas.height * (isMobile ? 0.25 : 0.4));
+                const midRadius = (mid / 255) * (canvas.height * (isMobile ? 0.4 : 0.6));
 
                 ctx.beginPath();
                 ctx.arc(cx, cy, bassRadius, 0, 2 * Math.PI);
@@ -359,7 +360,6 @@ export default function Visualizer() {
     return (
         <div
             className="visualizer-page"
-            style={{ cursor: hudVisible ? 'default' : 'none' }}
         >
             <div
                 className="viz-background"
@@ -381,7 +381,7 @@ export default function Visualizer() {
 
             <button
                 className={`hud-toggle-btn ${!hudVisible ? 'hud-hidden' : ''}`}
-                onClick={toggleForceHide} /* --- NOUVEAU --- */
+                onClick={toggleForceHide}
                 title="Cacher/Afficher l'interface (Touche H)"
             >
                 {hudVisible ? <EyeOff size={24} /> : <Eye size={24} />}

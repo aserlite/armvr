@@ -26,7 +26,6 @@
     gap: 2rem;
 }
 
-/* --- BOUTONS & OVERLAYS --- */
 .close-viz-btn {
     position: absolute;
     top: 2rem;
@@ -402,4 +401,69 @@
     background: #050110;
     color: white;
     padding: 10px;
+}
+
+@media (max-width: 768px) {
+    .viz-bottom-section {
+        padding: 1.5rem 1rem;
+    }
+
+    .viz-info {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+
+    .viz-left-block,
+    .viz-center-block,
+    .viz-right-block {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .viz-cover {
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+    }
+
+    .viz-text h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .marquee-text {
+        font-size: 0.9rem;
+    }
+
+    .viz-right-block {
+        justify-content: center;
+    }
+
+    .viz-selector {
+        width: 100%;
+        text-align: center;
+        padding: 0.6rem;
+    }
+
+    .close-viz-btn,
+    .hud-toggle-btn {
+        top: 1rem;
+        width: 40px;
+        height: 40px;
+    }
+
+    .close-viz-btn {
+        right: 1rem;
+    }
+
+    .hud-toggle-btn {
+        left: 1rem;
+    }
+
+    .viz-vinyl-container {
+        width: 25vh;
+        height: 25vh;
+        top: 38%;
+    }
 }
